@@ -48,21 +48,39 @@ console.log("Server", server);
 
 if (
     client.IP === ""
-    &&    
+    &&
     client.mask === ""
-    &&    
+    &&
     client.gateway === ""
-    &&    
+    &&
     client.netID === ""
-    &&    
+    &&
     gateway.client === ""
 ) {
-    location[0] = "1.2.3.4"
-    location[1] = "255.255.255.0"
-    location[2] = "1.2.3.5"
-    location[3] = "1.2.3.0"
+    client.IP = "1.2.3.4"
+    client.mask = "255.255.255.0"
+    client.gateway = "1.2.3.5"
+    client.netID = "1.2.3.0"
 
-    location[4] = "1.2.3.5"
+    gateway.client = "1.2.3.5"
+}
+if (
+    server.IP === ""
+    &&
+    server.mask === ""
+    &&
+    server.gateway === ""
+    &&
+    server.netID === ""
+    &&
+    gateway.server === ""
+) {
+    server.IP = "2.3.4.156"
+    server.mask = "255.255.255.0"
+    server.gateway = "2.3.4.5"
+    server.netID = "2.3.4.0"
+
+    gateway.server = "2.3.4.5"
 }
 
 if (
