@@ -1,0 +1,119 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.centered {
+  max-width: 50%;
+  z-index: 0;
+}
+body {
+    background: black;
+    margin-top: 64px;
+    margin-left: 64px;
+}
+body,div,table, tr, td {
+	font-family: 'VT323';
+	font-size: 18pt;
+    color: lime;
+}
+img.star {
+	width: 40px;
+	position:relative;
+	top: 13px;
+}
+input {
+	font-family: 'VT323';
+	font-size: 1em;
+	height:1em;
+    background: black;
+	box-shadow: 0px;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+    caret-color: lime;
+    color: lime;
+}
+div#feedback {
+	vertical-align: center;
+	text-align: left;
+	padding-right: 20px;
+    font-size: 48pt;
+    color: red;
+}
+input:focus {
+	outline: none;
+}
+div.host {
+	width: 340px;
+}
+div.router {
+    width: 400px;
+}
+div.router table tr td:first-child, 
+div.router table tr td:nth-child(3) {
+    width: 40px;
+}
+div.router table tr td:nth-child(2),
+div.router table tr td:nth-child(4) {
+    width: 160px;
+}
+td {
+	width: 170px;
+	margin: 0;
+	padding: 0;
+    text-align: left;
+}
+tr {
+	margin: 0;
+	padding: 0;
+}
+table {
+	margin: 0;
+	padding: 0;
+}
+input {
+	width: 170px;
+	border: 0px;
+    border-bottom: 2px dashed lime;
+}
+.host { 
+}
+table {
+	border-collapse: separate;
+	border-spacing: 0px;
+}
+canvas {
+    background: black;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background:black;
+	height: 80%;
+    width: 80%;
+	z-index: -1;
+}
+img.computer {
+	width: 64px;
+	text-align: center;
+	margin: auto;
+	display: block;
+	padding-bottom: 5px;
+}
+#access_granted
+{
+    font-size: 48pt;
+}
+#content {
+    padding-top: 170px;
+}

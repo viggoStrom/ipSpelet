@@ -1,0 +1,257 @@
+
+<!-- saved from url=(0020)https://ip.ntig.dev/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="./ip.ntig.dev_files/jquery.min.js.download"></script>
+<script src="./ip.ntig.dev_files/jquery.form.min.js.download" "=""></script>
+<link rel="stylesheet" href="./ip.ntig.dev_files/jquery-ui.css">
+<link rel="stylesheet" href="./ip.ntig.dev_files/style.css">
+<style>
+#preload-01 { background: url(/static/peanut.gif) no-repeat -9999px -9999px; }
+#preload-02 { background: url(/static/google.gif) no-repeat -9999px -9999px; }
+#preload-03 { background: url(/static/hackerman.gif) no-repeat -9999px -9999px; }
+#preload-04 { background: url(/static/pr.gif) no-repeat -9999px -9999px; }
+#preload-05 { background: url(/static/ncis.gif) no-repeat -9999px -9999px; }
+#preload-06 { background: url(/static/hacking.gif) no-repeat -9999px -9999px; }
+#preload-07 { background: url(/static/typewriter.gif) no-repeat -9999px -9999px; }
+</style>
+<script src="./ip.ntig.dev_files/jquery-ui.min.js.download"></script>
+<script>
+    var index = 0;
+    var submitted = false;
+    function typewriter(el, textToWrite, end=false)
+    {
+        if(textToWrite.length > 0)
+        {
+            if(textToWrite[0] == '\n')
+                el.innerHTML += "<br/>";
+            else
+                el.innerHTML += textToWrite[0];
+            window.requestAnimationFrame(function() { typewriter(el, textToWrite.substring(1), end)});
+        } else if(end) {
+            end();
+        }
+    }
+    function reload()
+    {
+	    location.reload()
+	    return false;
+    }
+	function clear(color)
+	{
+		var canvas = document.getElementById('myCanvas');
+		ctx.fillStyle = color;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+	}
+	function drawConnection()
+	{
+		var canvas = document.getElementById('myCanvas');
+		canvas.width = window.innerWidth;
+		canvas.height= 0.8*window.innerHeight;
+		ctx = canvas.getContext('2d');
+		ctx.fillStyle = "black";
+		x1 = $('#host1').offset().left+24+170
+		y1 = $('#host1').offset().top+24
+
+		x2 = $('#router').offset().left+170+170
+		y2 = $('#router').offset().top+24
+		x3 = $('#router').offset().left+170+170
+		y3 = $('#router').offset().top+24
+
+		x4 = $('#host2').offset().left+24+190+190
+		y4 = $('#host2').offset().top+24
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.strokeStyle = "white";
+		ctx.beginPath();
+		ctx.moveTo(x1,y1);
+		ctx.lineTo(x2,y2);
+		ctx.moveTo(x3,y3);
+		ctx.lineTo(x4,y4);
+		ctx.stroke();
+	}
+        // wait for the DOM to be loaded 
+        $(document).ready(function() { 
+            // bind 'myForm' and provide a simple callback function 
+		drawConnection()
+		$($("input[type=text]")[0]).focus();
+		$('#myForm').ajaxForm({
+			dataType: 'json',
+			success: showResponse
+			}); 
+		$('input, form').keypress(function (e) {
+				if (e.which == 13) {
+					e.preventDefault();				
+
+					var submit = true
+					$('input[type=text]').each (function() {
+						if($(this).val() == "" && submit == true)
+						{
+							$(this).focus();
+							submit = false
+						}
+					})
+					if(submit && !submitted) {
+                        submitted = true 
+						$('form').submit();
+						return false;    //<---- Add this line
+					}
+				}
+			});
+        /*
+		$('.host').draggable({drag: function() {
+			drawConnection()
+			prevOffset = $(this).offset()
+		}
+		})
+		$(".host, .router").droppable({
+		    greedy: true,
+		    over: function(e,ui) {
+			ui.helper.offset(curOffset= prevOffset).trigger("mouseup");
+		    },
+		    tolerance: "touch"
+		});
+        */
+		$( window ).resize(function() {
+			drawConnection();
+		});
+        }); 
+	function showResponse(responseText, statusText, xhr, $form)  { 
+		if(responseText['response'] == true) {
+		    $('#myCanvas').hide();
+            $('#myForm').fadeOut(function () {
+                $('#access_granted').css('color', 'green');
+                document.getElementById('access_granted').innerHTML = "";
+                $('#access_granted').fadeIn(function() {
+                    typewriter(document.getElementById('access_granted'), "ACCESS GRANTED...", function() {
+                        window.setTimeout(reload, 1000);
+                    });
+                });
+            });
+		} else {
+            console.log("starting error...");
+            submitted = false;
+		    $('#myCanvas').fadeOut();
+            $('#stars').html("");
+            var hearts = document.getElementById('hearts');
+            hearts.removeChild(hearts.childNodes[1]);
+            $('#myForm').fadeOut(function () {
+                console.log("myForm#fadeOut");
+                $('#access_granted').css('color', 'red');
+                document.getElementById('access_granted').innerHTML = "";
+                $('#access_granted').fadeIn(function() {
+                    console.log("access_granted#fadeIn");
+                    typewriter(document.getElementById('access_granted'), "ACCESS DENIED...\n"+responseText['response'], function() {
+                        console.log("typewriter#end");
+                        if(responseText['response'] == 'GAME OVER')
+                            window.setInterval(function() { window.location.href = '/gameover'; } , 1000);
+                        else {
+                            window.setTimeout(function() {
+                                console.log("typewriter#end#setInterval2");
+                                $('#access_granted').fadeOut();
+                                $('#myCanvas').fadeIn();
+                                $('#myForm').fadeIn(function() {
+                                    $($("input[type=text]")[0]).focus();
+                                });
+                            }, 2000);
+                        }
+                    });
+                });
+            });
+                
+            //document.getElementById('feedback').innerHTML = "";
+            //typewriter(document.getElementById('feedback'), responseText['response']);
+		    //$('#feedback').text(responseText['response'])
+
+		$('input, form').keypress(function (e) {
+				if (e.which == 13) {
+				    e.preventDefault();					
+
+					var submit = true
+					$('input[type=text]').each (function() {
+						if($(this).val() == "" && submit == true)
+						{
+							$(this).focus();
+							submit = false
+						}
+					})
+					if(submit && !submitted) {
+                        submitted = true;
+						$('form').submit();
+						return false;    //<---- Add this line
+					}
+				}
+			});
+
+		}
+	    // is the json data object returned by the server 
+} 
+</script>
+<link href="./ip.ntig.dev_files/css" rel="stylesheet">
+</head>
+<body>
+<div id="content">
+<form id="myForm" method="POST" action="https://ip.ntig.dev/validate2" autocomplete="off">
+    <div style="float: left" class="host" id="host1">
+    <img class="computer" src="./ip.ntig.dev_files/Computer.svg">
+    <table cellspacing="0">
+        <tbody><tr><td>Klient</td></tr>
+        <tr><td>IP:</td><td><input type="hidden" name="ip" value="253.135.202.79">253.135.202.79</td></tr>
+        <tr><td>Nätmask:</td><td><input type="hidden" name="netmask" value="255.255.255.0">255.255.255.0</td></tr>
+        <tr><td>Gateway:</td><td><input type="hidden" name="gateway" value="253.135.202.71">253.135.202.71</td></tr>
+        <tr><td>Nät-ID:</td><td><input type="hidden" name="netid" value="253.135.202.0">253.135.202.0</td></tr>
+    </tbody></table>
+    </div>
+    <div style="float: left; margin-left: 30%; position: absolute;" class="router" id="router">
+    <img class="computer" src="./ip.ntig.dev_files/Router.png">
+    <table style="text-align: center">
+        <tbody><tr><td colspan="4" style="text-align: center">Gateway</td></tr>
+        <tr><td>IP:</td><td><input type="hidden" name="router_left" value="253.135.202.71">253.135.202.71</td><td>IP:</td><td><input type="text" name="router_right"></td></tr>
+    </tbody></table>
+    </div>
+    <div style="float: left; margin-left: 60%; position: absolute;" class="host" id="host2">
+    <img class="computer" src="./ip.ntig.dev_files/Computer.svg">
+    <table>
+        <tbody><tr><td colspan="4" style="text-align: right">Server</td></tr>
+        <tr><td>IP:</td><td><input type="hidden" name="ip2" value="117.231.97.217">117.231.97.217</td></tr>
+        <tr><td>Nätmask:</td><td><input type="hidden" name="netmask2" value="255.255.255.0">255.255.255.0</td></tr>
+        <tr><td>Gateway:</td><td><input type="hidden" name="gateway2" value="117.231.97.58">117.231.97.58</td></tr>
+        <tr><td>Nät-ID:</td><td><input type="hidden" name="netid2" value="117.231.97.0">117.231.97.0</td></tr>
+    </tbody></table>
+    </div>
+    <input type="hidden" name="csrfmiddlewaretoken" value="xPw1qhoh3UiD32A9Hbggq1Cm5lIdkLjPg61YxcrFfaqufPXkBC4zPvzczuHkabop">
+    </form>
+    <div style="position: absolute;top: 16px;">
+    <img src="./ip.ntig.dev_files/logo.svg" height="48"> <br>
+    </div>
+    <div style="position: absolute;top: 75%;height: 20%;">
+        <div id="feedback"></div>
+        <div id="stars">
+             <img class="star" src="./ip.ntig.dev_files/Star.svg"> 
+             <img class="star" src="./ip.ntig.dev_files/Star.svg"> 
+        </div>
+        <div id="hearts">
+             <img class="star" src="./ip.ntig.dev_files/Heart.svg">  <img class="star" src="./ip.ntig.dev_files/Heart.svg">  <img class="star" src="./ip.ntig.dev_files/Heart.svg"> 
+        </div>
+    </div>
+    <!--<div style='position: absolute; right: 0; width: 20%; top: 0;height: 100%; margin: 0; padding: 0;'>
+    <iframe src='leader' style='height: 100%; width: 100%'>
+    </iframe>
+    </div>-->
+<canvas id="myCanvas" width="689" height="596">
+</canvas>
+</div>
+<div class="center">
+    <div class="centered">
+        <div id="access_granted">
+        </div>
+    </div>
+</div>
+<div id="preload-01"></div>
+<div id="preload-02"></div>
+<div id="preload-03"></div>
+<div id="preload-04"></div>
+<div id="preload-05"></div>
+<div id="preload-06"></div>
+<div id="preload-07"></div>
+
+
+</body></html>
