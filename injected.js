@@ -1,3 +1,6 @@
+// applies on https://ip.ntig.dev/
+// uses https://chromewebstore.google.com/detail/custom-javascript-for-web/ddbjnfjiigjmcpcpkmhogomapikjbjdk?hl=en-US&utm_source=ext_sidebar
+
 const clientPanel = document.querySelector("tbody").children
 const gatewayPanel = document.querySelectorAll("tbody")[1].children[1].children
 const serverPanel = document.querySelectorAll("tbody")[2].children
