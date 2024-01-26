@@ -151,9 +151,17 @@ function solveMask() { // requires: two of [ IP, gateway, netID ]
 function solveIP() { // requires: netID or gateway
     if (client.IP === "") {
         if (client.netID !== "") {
-            client.IP = client.netID.replace(/\.\d+$/, '') + ".1"
+            clientIP = client.netID.split(".").slice(0, 3);
+            clientIP.push(
+              (parseInt(client.netID.split(".")[3]) + 1).toString()
+            );
+            client.IP = clientIP.join(".");
         } else if (client.gateway !== "") {
-            client.IP = client.gateway.replace(/\.\d+$/, '') + ".1"
+            clientIP = client.gateway.split(".").slice(0, 3);
+            clientIP.push(
+              (parseInt(client.gateway.split(".")[3]) + 1).toString()
+            );
+            client.IP = clientIP.join(".");
         }
     }
 }
