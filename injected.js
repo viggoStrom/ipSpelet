@@ -111,8 +111,6 @@ else if (
     server.gateway = gateway.server
 }
 
-// 11111111111111111111111100000000
-// 256/(2^n). bits in byte, n gives number of ips per block
 // solve mask
 if (
     client.mask === ""
@@ -123,17 +121,66 @@ if (
     const addresses = [IP, gateway, netID].filter(Boolean)
 
     const mask = ["", "", "", ""]
+    let last;
 
     for (let index = 0; index < 4; index++) {
-        for (let addressIndex = 0; addressIndex < array.length; addressIndex++) {
-            let last = addresses[addressIndex][index]
+        for (let addressIndex = 0; addressIndex < addresses.length; addressIndex++) {
             if (addresses[addressIndex][index] === last) {
                 mask[index] = "255"
             }
+            last = addresses[addressIndex][index]
         }
     }
-    console.log(mask);
+
+    for (let index = 0; index < 4; index++) {
+        const decimalByte = mask[index]
+        if (
+            decimalByte === ""
+            // &&
+            // netID[index] === "0"
+        ) {
+            mask[index] = "0"
+        } 
+    }
+
+    client.mask = mask.join(".")
 }
+if (
+    server.mask === ""
+) {
+    const IP = server.IP.split(".")
+    const gateway = server.gateway.split(".")
+    const netID = server.netID.split(".")
+    const addresses = [IP, gateway, netID].filter(Boolean)
+
+    const mask = ["", "", "", ""]
+    let last;
+
+    for (let index = 0; index < 4; index++) {
+        for (let addressIndex = 0; addressIndex < addresses.length; addressIndex++) {
+            if (addresses[addressIndex][index] === last) {
+                mask[index] = "255"
+            }
+            last = addresses[addressIndex][index]
+        }
+    }
+
+    for (let index = 0; index < 4; index++) {
+        const decimalByte = mask[index]
+        if (
+            decimalByte === ""
+            // &&
+            // netID[index] === "0"
+        ) {
+            mask[index] = "0"
+        }
+    }
+
+    server.mask = mask.join(".")
+}
+
+// 11111111111111111111111100000000
+// 256/(2^n). bits in byte, n gives number of ips per block
 // if (
 //     client.mask === ""
 // ) {
@@ -249,8 +296,34 @@ if (
 if (
     client.netID === ""
 ) {
+    const maskLength = client.mask.split(".").filter((element) => { return element === "255" }).length
 
+    client.netID = client.IP.split(".").slice(0, maskLength).concat(new Array(4 - maskLength).fill("0")).join(".")
 }
+if (
+    server.netID === ""
+) {
+    const maskLength = server.mask.split(".").filter((element) => { return element === "255" }).length
+
+    server.netID = server.IP.split(".").slice(0, maskLength).concat(new Array(4 - maskLength).fill("0")).join(".")
+}
+
+// set results
+addEventListener("keydown", (event) => {
+    if (event.key === " ") {
+        event.preventDefault()
+        clientPanel[1].children[1].children[0].value = client.IP
+        clientPanel[2].children[1].children[0].value = client.mask
+        clientPanel[3].children[1].children[0].value = client.gateway
+        clientPanel[4].children[1].children[0].value = client.netID
+        gatewayPanel[1].children[0].value = gateway.client
+        gatewayPanel[3].children[0].value = gateway.server
+        serverPanel[1].children[1].children[0].value = server.IP
+        serverPanel[2].children[1].children[0].value = server.mask
+        serverPanel[3].children[1].children[0].value = server.gateway
+        serverPanel[4].children[1].children[0].value = server.netID
+    }
+})
 
 
 console.log("Client", client);
