@@ -1,5 +1,5 @@
 // applies on https://ip.ntig.dev/
-// uses https://chromewebstore.google.com/detail/custom-javascript-for-web/ddbjnfjiigjmcpcpkmhogomapikjbjdk?hl=en-US&utm_source=ext_sidebar
+// uses https://chromewebstore.google.com/detail/user-javascript-and-css/nbhcbdghjpllgmfilhnhkllmkecfmpld?hl=sv
 
 const clientPanel = document.querySelector("tbody").children
 const gatewayPanel = document.querySelectorAll("tbody")[1].children[1].children
