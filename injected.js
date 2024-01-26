@@ -39,12 +39,9 @@ const server = {
 }
 
 
-console.log("Client", client);
-console.log("Gateway", gateway);
-console.log("Server", server);
-
-
-// The Logic-ining
+// *************** //
+// The Logic-ining //
+// *************** //
 
 // Empty cases
 if (
@@ -113,6 +110,130 @@ else if (
 ) {
     server.gateway = gateway.server
 }
+
+// solve mask
+if (
+    client.mask === ""
+    ||
+    true
+) {
+    const IP = client.IP.split(".")
+    const gateway = client.gateway.split(".")
+    const netID = client.netID.split(".")
+
+    if (
+        IP[0] === gateway[0]
+        &&
+        IP[0] === netID[0]
+    ) {
+
+    }
+}
+
+// solve IP (in /24 cases)
+if (
+    client.IP === ""
+    &&
+    client.netID !== ""
+    &&
+    client.mask === "255.255.255.0"
+) {
+    let baseIP = client.netID.replace(/\.\d+$/, '')
+    let newClientIP = baseIP + ".1"
+
+    while (
+        newClientIP === client.gateway
+        ||
+        newClientIP === gateway.client
+        ||
+        newClientIP === baseIP + ".0"
+        ||
+        newClientIP === baseIP + ".255"
+    ) {
+        newClientIP = baseIP + `.${Math.random() * 255}`
+    }
+
+    client.IP = newClientIP
+}
+if (
+    client.IP === ""
+    &&
+    client.gateway !== ""
+    &&
+    client.mask === "255.255.255.0"
+) {
+    let baseIP = client.gateway.replace(/\.\d+$/, '')
+    let newClientIP = baseIP + ".1"
+
+    while (
+        newClientIP === client.gateway
+        ||
+        newClientIP === gateway.client
+        ||
+        newClientIP === baseIP + ".0"
+        ||
+        newClientIP === baseIP + ".255"
+    ) {
+        newClientIP = baseIP + `.${Math.random() * 255}`
+    }
+
+    client.IP = newClientIP
+}
+if (
+    server.IP === ""
+    &&
+    server.netID !== ""
+    &&
+    server.mask === "255.255.255.0"
+) {
+    let baseIP = server.netID.replace(/\.\d+$/, '')
+    let newServerIP = baseIP + ".1"
+
+    while (
+        newServerIP === server.gateway
+        ||
+        newServerIP === gateway.server
+        ||
+        newServerIP === baseIP + ".0"
+        ||
+        newServerIP === baseIP + ".255"
+    ) {
+        newServerIP = baseIP + `.${Math.random() * 255}`
+    }
+
+    server.IP = newServerIP
+}
+if (
+    server.IP === ""
+    &&
+    server.gateway !== ""
+    &&
+    server.mask === "255.255.255.0"
+) {
+    let baseIP = server.gateway.replace(/\.\d+$/, '')
+    let newserverIP = baseIP + ".1"
+
+    while (
+        newserverIP === server.gateway
+        ||
+        newserverIP === gateway.server
+        ||
+        newserverIP === baseIP + ".0"
+        ||
+        newserverIP === baseIP + ".255"
+    ) {
+        newserverIP = baseIP + `.${Math.random() * 255}`
+    }
+
+    server.IP = newserverIP
+}
+
+
+
+
+console.log("Client", client);
+console.log("Gateway", gateway);
+console.log("Server", server);
 
 
 // loop through and enter the new results at every location missing a value i.e. .value === ""
