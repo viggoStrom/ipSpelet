@@ -140,7 +140,7 @@ if (
             // netID[index] === "0"
         ) {
             mask[index] = "0"
-        } 
+        }
     }
 
     client.mask = mask.join(".")
@@ -194,105 +194,19 @@ if (
 //     }
 // }
 
-// solve IP (in /24 cases)
+// solve IP
 if (
     client.IP === ""
-    &&
-    client.netID !== ""
-    &&
-    client.mask === "255.255.255.0"
 ) {
-    let baseIP = client.netID.replace(/\.\d+$/, '')
-    let newClientIP = baseIP + ".1"
-
-    while (
-        newClientIP === client.gateway
-        ||
-        newClientIP === gateway.client
-        ||
-        newClientIP === baseIP + ".0"
-        ||
-        newClientIP === baseIP + ".255"
-    ) {
-        newClientIP = baseIP + `.${Math.random() * 255}`
+    if (client.netID !== "") {
+        client.IP = client.netID.replace(/\.\d+$/, '') + ".1"
+    } else if (client.gateway !== "") {
+        client.IP = client.gateway.replace(/\.\d+$/, '') + ".1"
     }
-
-    client.IP = newClientIP
-}
-if (
-    client.IP === ""
-    &&
-    client.gateway !== ""
-    &&
-    client.mask === "255.255.255.0"
-) {
-    let baseIP = client.gateway.replace(/\.\d+$/, '')
-    let newClientIP = baseIP + ".1"
-
-    while (
-        newClientIP === client.gateway
-        ||
-        newClientIP === gateway.client
-        ||
-        newClientIP === baseIP + ".0"
-        ||
-        newClientIP === baseIP + ".255"
-    ) {
-        newClientIP = baseIP + `.${Math.random() * 255}`
-    }
-
-    client.IP = newClientIP
-}
-if (
-    server.IP === ""
-    &&
-    server.netID !== ""
-    &&
-    server.mask === "255.255.255.0"
-) {
-    let baseIP = server.netID.replace(/\.\d+$/, '')
-    let newServerIP = baseIP + ".1"
-
-    while (
-        newServerIP === server.gateway
-        ||
-        newServerIP === gateway.server
-        ||
-        newServerIP === baseIP + ".0"
-        ||
-        newServerIP === baseIP + ".255"
-    ) {
-        newServerIP = baseIP + `.${Math.random() * 255}`
-    }
-
-    server.IP = newServerIP
-}
-if (
-    server.IP === ""
-    &&
-    server.gateway !== ""
-    &&
-    server.mask === "255.255.255.0"
-) {
-    let baseIP = server.gateway.replace(/\.\d+$/, '')
-    let newserverIP = baseIP + ".1"
-
-    while (
-        newserverIP === server.gateway
-        ||
-        newserverIP === gateway.server
-        ||
-        newserverIP === baseIP + ".0"
-        ||
-        newserverIP === baseIP + ".255"
-    ) {
-        newserverIP = baseIP + `.${Math.random() * 255}`
-    }
-
-    server.IP = newserverIP
 }
 
-// solve net ID
+
+// solve netID
 if (
     client.netID === ""
 ) {
@@ -307,6 +221,25 @@ if (
 
     server.netID = server.IP.split(".").slice(0, maskLength).concat(new Array(4 - maskLength).fill("0")).join(".")
 }
+
+// solve two missing gateway
+if (
+    client.gateway === ""
+    &&
+    gateway.client === ""
+) {
+    client.gateway = client.netID
+    gateway.client = client.netID
+}
+if (
+    server.gateway === ""
+    &&
+    gateway.server === ""
+) {
+    server.gateway = server.netID
+    gateway.server = server.netID
+}
+
 
 // set results
 addEventListener("keydown", (event) => {

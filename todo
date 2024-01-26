@@ -1,0 +1,2 @@
+- Fix IP for non /24 cases
+- Do subnetting
