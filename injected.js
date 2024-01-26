@@ -5,7 +5,7 @@ const clientPanel = document.querySelector("tbody").children
 const gatewayPanel = document.querySelectorAll("tbody")[1].children[1].children
 const serverPanel = document.querySelectorAll("tbody")[2].children
 
-const location = [
+const locations = [
     // Client
     clientPanel[1].children[1].children[0].value, // ip
     clientPanel[2].children[1].children[0].value, // mask
@@ -22,20 +22,20 @@ const location = [
 ]
 
 const client = {
-    IP: location[0],
-    mask: location[1],
-    gateway: location[2],
-    netID: location[3],
+    IP: locations[0],
+    mask: locations[1],
+    gateway: locations[2],
+    netID: locations[3],
 }
 const gateway = {
-    client: location[4],
-    server: location[5],
+    client: locations[4],
+    server: locations[5],
 }
 const server = {
-    IP: location[6],
-    mask: location[7],
-    gateway: location[8],
-    netID: location[9],
+    IP: locations[6],
+    mask: locations[7],
+    gateway: locations[8],
+    netID: locations[9],
 }
 
 
@@ -46,6 +46,7 @@ console.log("Server", server);
 
 // The Logic-ining
 
+// Empty cases
 if (
     client.IP === ""
     &&
@@ -83,6 +84,7 @@ if (
     gateway.server = "2.3.4.5"
 }
 
+// Gateway mirror cases
 if (
     gateway.client === ""
     &&
@@ -111,5 +113,6 @@ else if (
 ) {
     server.gateway = gateway.server
 }
+
 
 // loop through and enter the new results at every location missing a value i.e. .value === ""
