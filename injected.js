@@ -88,6 +88,44 @@ function solveEmptyCase(side) {
 }
 
 /**
+ * Requires [ - ]
+ * @param side Client or server.
+ */
+function solveOnlyMaskCase(side) {
+    if (
+        side.IP === ""
+        &&
+        side.mask !== ""
+        &&
+        side.gateway === ""
+        &&
+        side.netID === ""
+        &&
+        gateway[side.name] === ""
+    ) {
+        side.IP = "1.1.1.1"
+        side.gateway = "1.1.1.0"
+
+        side.mask.split(".").reduce((partialSum, a) => partialSum + a, 0)
+
+        const CIDR = []
+    
+        side.mask.split(".").forEach(decimal => {
+            const binary = parseInt(decimal).toString(2).split("")
+            
+            const localCIDR = binary.filter(element => {return element === "1"}).length
+
+            CIDR.push(localCIDR)
+        });
+
+
+        side.netID = "1.1.1.0"
+
+        gateway[side.name] = "1.1.1.0"
+    }
+}
+
+/**
  * Requires [ either gateway ]
  * @param side Client or server.
  */
@@ -147,6 +185,18 @@ function solveMask(side) {
         const netID = side.netID.split(".")
         const addresses = [IP, gateway, netID].filter(Boolean)
 
+        if (addresses.length === 1) {
+
+            if (side.netID === "") {
+                side.mask = "0.0.0.0"
+            }
+            else {
+                side.mask = "255.255.255.254"
+            }
+
+            return
+        }
+
         const mask = ["", "", "", ""]
         let last;
 
@@ -200,31 +250,63 @@ function solveIP(side) {
     }
 }
 
-// Requires nothing.
-// Might fill some info. 
-solveEmptyCase(client)
-solveEmptyCase(server)
-
-// If either gateway is defined
-solveGatewayMirror(client)
-solveGatewayMirror(server)
-
-solveNetID
-
-// If none of the gateways are defined try to define them with netID
-solveGatewayPair(client)
-solveGatewayPair(server)
-
-
-
-console.log("Client", client);
-console.log("Gateway", gateway);
-console.log("Server", server);
 
 
 // set results
 addEventListener("keydown", (event) => {
     if (event.key === " ") {
+        // Requires nothing.
+        // Might fill some info. 
+        solveEmptyCase(client)
+        solveEmptyCase(server)
+
+        solveOnlyMaskCase(client)
+        solveOnlyMaskCase(server)
+
+        // If either gateway is defined
+        solveGatewayMirror(client)
+        solveGatewayMirror(server)
+
+        solveMask(client)
+        solveMask(server)
+
+        solveIP(client)
+        solveIP(server)
+
+        solveNetID(client)
+        solveNetID(server)
+
+        solveGatewayPair(client)
+        solveGatewayPair(server)
+
+        solveEmptyCase(client)
+        solveEmptyCase(server)
+
+        solveOnlyMaskCase(client)
+        solveOnlyMaskCase(server)
+
+        // If either gateway is defined
+        solveGatewayMirror(client)
+        solveGatewayMirror(server)
+
+        solveMask(client)
+        solveMask(server)
+
+        solveIP(client)
+        solveIP(server)
+
+        solveNetID(client)
+        solveNetID(server)
+
+        solveGatewayPair(client)
+        solveGatewayPair(server)
+
+
+
+        console.log("Client", client);
+        console.log("Gateway", gateway);
+        console.log("Server", server);
+
         event.preventDefault()
         clientPanel[1].children[1].children[0].value = client.IP
         clientPanel[2].children[1].children[0].value = client.mask
