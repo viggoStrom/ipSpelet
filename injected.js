@@ -209,8 +209,11 @@ solveEmptyCase(server)
 solveGatewayMirror(client)
 solveGatewayMirror(server)
 
-// If we have
-sol()
+solveNetID
+
+// If none of the gateways are defined try to define them with netID
+solveGatewayPair(client)
+solveGatewayPair(server)
 
 
 
