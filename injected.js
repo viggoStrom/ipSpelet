@@ -15,6 +15,7 @@ const locations = [
     gatewayPanel[1].children[0].value, // client gateway
     gatewayPanel[3].children[0].value, // server gateway
 
+    // Server
     serverPanel[1].children[1].children[0].value, // ip
     serverPanel[2].children[1].children[0].value, // mask
     serverPanel[3].children[1].children[0].value, // gateway
@@ -26,6 +27,7 @@ const client = {
     mask: locations[1],
     gateway: locations[2],
     netID: locations[3],
+    name: "client"
 }
 const gateway = {
     client: locations[4],
@@ -36,6 +38,7 @@ const server = {
     mask: locations[7],
     gateway: locations[8],
     netID: locations[9],
+    name: "server"
 }
 
 
@@ -59,68 +62,88 @@ const server = {
 //     }
 // }
 
-function solveEmptyCase() { // requires: -
+/**
+ * Requires [ - ]
+ * @param side Client or server.
+ */
+function solveEmptyCase(side) {
     if (
-        client.IP === ""
+        side.IP === ""
         &&
-        client.mask === ""
+        side.mask === ""
         &&
-        client.gateway === ""
+        side.gateway === ""
         &&
-        client.netID === ""
+        side.netID === ""
         &&
-        gateway.client === ""
+        gateway[side.name] === ""
     ) {
-        client.IP = "1.2.3.4"
-        client.mask = "255.255.255.0"
-        client.gateway = "1.2.3.5"
-        client.netID = "1.2.3.0"
+        side.IP = "1.2.3.4"
+        side.mask = "255.255.255.0"
+        side.gateway = "1.2.3.5"
+        side.netID = "1.2.3.0"
 
-        gateway.client = "1.2.3.5"
+        gateway[side.name] = "1.2.3.5"
     }
 }
 
-function solveGatewayMirror() { // requires: -
+/**
+ * Requires [ - ]
+ * @param side Client or server.
+ */
+function solveGatewayMirror(side) {
     if (
-        gateway.client === ""
+        gateway[side.name] === ""
         &&
-        client.gateway !== ""
+        side.gateway !== ""
     ) {
-        gateway.client = client.gateway
+        gateway[side.name] = side.gateway
     }
     else if (
-        gateway.client !== ""
+        gateway[side.name] !== ""
         &&
-        client.gateway === ""
+        side.gateway === ""
     ) {
-        client.gateway = gateway.client
+        side.gateway = gateway[side.name]
     }
 }
 
-function solveGatewayPair() { // requires: netID
+/**
+ * Requires [ netID ]
+ * @param side Client or server.
+ */
+function solveGatewayPair(side) {
     if (
-        client.gateway === ""
+        side.gateway === ""
         &&
-        gateway.client === ""
+        gateway[side.name] === ""
     ) {
-        client.gateway = client.netID
-        gateway.client = client.netID
+        side.gateway = side.netID
+        gateway[side.name] = side.netID
     }
 }
 
-function solveNetID() { // requires: mask, IP
-    if (client.netID === "") {
-        const maskLength = client.mask.split(".").filter((element) => { return element === "255" }).length
+/**
+ * Requires [ IP && mask ]
+ * @param side Client or server.
+ */
+function solveNetID(side) {
+    if (side.netID === "") {
+        const maskLength = side.mask.split(".").filter((element) => { return element === "255" }).length
 
-        client.netID = client.IP.split(".").slice(0, maskLength).concat(new Array(4 - maskLength).fill("0")).join(".")
+        side.netID = side.IP.split(".").slice(0, maskLength).concat(new Array(4 - maskLength).fill("0")).join(".")
     }
 }
 
-function solveMask() { // requires: two of [ IP, gateway, netID ]
-    if (client.mask === "") {
-        const IP = client.IP.split(".")
-        const gateway = client.gateway.split(".")
-        const netID = client.netID.split(".")
+/**
+ * Requires two of the following [ IP && gateway && netID ]
+ * @param side Client or server.
+ */
+function solveMask(side) {
+    if (side.mask === "") {
+        const IP = side.IP.split(".")
+        const gateway = side.gateway.split(".")
+        const netID = side.netID.split(".")
         const addresses = [IP, gateway, netID].filter(Boolean)
 
         const mask = ["", "", "", ""]
@@ -144,28 +167,43 @@ function solveMask() { // requires: two of [ IP, gateway, netID ]
             }
         }
 
-        client.mask = mask.join(".")
+        side.mask = mask.join(".")
     }
 }
 
-function solveIP() { // requires: netID or gateway
-    if (client.IP === "") {
-        if (client.netID !== "") {
-            clientIP = client.netID.split(".").slice(0, 3);
-            clientIP.push(
-              (parseInt(client.netID.split(".")[3]) + 1).toString()
+/**
+ * Requires [ netID || gateway ]
+ * @param side Client or server.
+ */
+function solveIP(side) {
+    if (side.IP === "") {
+
+        if (side.netID !== "") {
+            const IP = side.netID.split(".").slice(0, 3);
+
+            IP.push(
+                (parseInt(side.netID.split(".")[3]) + 1).toString()
             );
-            client.IP = clientIP.join(".");
-        } else if (client.gateway !== "") {
-            clientIP = client.gateway.split(".").slice(0, 3);
-            clientIP.push(
-              (parseInt(client.gateway.split(".")[3]) + 1).toString()
+
+            side.IP = IP.join(".");
+
+        } else if (side.gateway !== "") {
+            const IP = side.gateway.split(".").slice(0, 3);
+
+            IP.push(
+                (parseInt(side.gateway.split(".")[3]) + 1).toString()
             );
-            client.IP = clientIP.join(".");
+
+            side.IP = IP.join(".");
         }
     }
 }
 
+solveEmptyCase(client)
+solveEmptyCase(server)
+
+solveGatewayMirror(client)
+solveGatewayMirror(server)
 
 
 console.log("Client", client);
