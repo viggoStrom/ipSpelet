@@ -174,7 +174,7 @@ function solveNetID(side) {
 }
 
 /**
- * Requires [ (IP && gateway) || (IP && netID) || (gateway && netID) ]
+ * Requires [ IP || netID || gateway ]
  * Unsure
  * @param side Client or server.
  */
