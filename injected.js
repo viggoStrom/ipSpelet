@@ -88,7 +88,7 @@ function solveEmptyCase(side) {
 }
 
 /**
- * Requires [ - ]
+ * Requires [ either gateway ]
  * @param side Client or server.
  */
 function solveGatewayMirror(side) {
@@ -136,7 +136,8 @@ function solveNetID(side) {
 }
 
 /**
- * Requires two of the following [ IP && gateway && netID ]
+ * Requires [ (IP && gateway) || (IP && netID) || (gateway && netID) ]
+ * Unsure
  * @param side Client or server.
  */
 function solveMask(side) {
@@ -199,11 +200,18 @@ function solveIP(side) {
     }
 }
 
+// Requires nothing.
+// Might fill some info. 
 solveEmptyCase(client)
 solveEmptyCase(server)
 
+// If either gateway is defined
 solveGatewayMirror(client)
 solveGatewayMirror(server)
+
+// If we have
+sol()
+
 
 
 console.log("Client", client);
