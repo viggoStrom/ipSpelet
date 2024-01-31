@@ -306,11 +306,29 @@ function bruteForce(side) {
     // }
 }
 
-addEventListener("keydown", (event) => {
-    if (event.key === "enter") {
+
+
+const hearts = document.getElementById("hearts")
+const observer = new MutationObserver((mutations) => {
+    if (
+        mutations.length > 0
+        &&
+        hearts.children.length > 0
+        ) {
         location.reload()
     }
 })
+observer.observe(document.getElementById("myForm"), { attributes: true, childList: false, subtree: false })
+// document.getElementById("myForm").addEventListener("", (event) => {
+//     console.log(event);
+// })
+
+// addEventListener("keydown", (event) => {
+//     console.log("object");
+//     if (event.key === "enter") {
+//         // location.reload()
+//     }
+// })
 addEventListener("load", (event) => {
     client.IP = "1.0.0.1"
     client.mask = "255.0.0.0"
