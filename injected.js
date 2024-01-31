@@ -106,22 +106,39 @@ function solveOnlyMaskCase(side) {
         side.IP = "1.1.1.1"
         side.gateway = "1.1.1.0"
 
-        side.mask.split(".").reduce((partialSum, a) => partialSum + a, 0)
+        // side.mask.split(".").reduce((partialSum, a) => partialSum + a, 0)
 
-        const CIDR = []
+        const CIDRArray = []
     
         side.mask.split(".").forEach(decimal => {
             const binary = parseInt(decimal).toString(2).split("")
             
             const localCIDR = binary.filter(element => {return element === "1"}).length
 
-            CIDR.push(localCIDR)
+            CIDRArray.push(localCIDR)
         });
 
+        const CIDR = CIDRArray.reduce((partialSum, a) => partialSum + a, 0);
+        
+        const CIDRFloor = Math.floor(CIDR / 8)
+        const CIDRRest = CIDR % 8
 
-        side.netID = "1.1.1.0"
+        let netIDArray = []
 
-        gateway[side.name] = "1.1.1.0"
+        for (let index = 0; index < CIDRFloor; index++) {
+            netIDArray.push("255")    
+        }
+        if (CIDRRest !== 0) {
+            const div = (256 / CIDRRest).toString()
+            netIDArray.push(div)
+        }
+
+        for (let index = 0; index < 4 - netIDArray.length; index++) {
+            netIDArray.push("0")
+            
+        }
+
+        side.netID = netIDArray.join(".")
     }
 }
 
