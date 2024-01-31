@@ -1,4 +1,4 @@
-#Bug Report
+# Bug Report
 
 Detta spel har ett stort fel. Med JS kan man injecera IP-addresser direkt in i textrutorna som är synliga men även dem som är dolda. 
 När man skickar in resultatet kollar servern på de dolda textrutorna och inte den synliga texten även i dem fallen där vissa rutor redan är bestämda. 
