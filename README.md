@@ -1,3 +1,5 @@
+Sida var live på [ip.ntig.dev](https://ip.ntig.dev/) men verkar vara nere nu. Filerna ligger sparade i repot under [ip.ntig.dev_files](./ip.ntig.dev_files).
+
 # Bug Report
 
 Detta spel har ett stort fel. Med JS kan man injecera IP-addresser direkt in i textrutorna som är synliga men även dem som är dolda. 
